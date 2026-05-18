@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36414.22 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Project6TD", "Project6TD.csproj", "{22FB3B9D-1C06-480B-99C7-7D03A127016D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Monogame.ImGuiNet", "..\..\..\Downloads\MonoGame.ImGuiNet-main\MonoGame.ImGuiNet-main\MonoGame.ImGuiNet\Monogame.ImGuiNet.csproj", "{8BDC9057-60CC-AE88-FB22-3E5778B22B02}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{22FB3B9D-1C06-480B-99C7-7D03A127016D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{22FB3B9D-1C06-480B-99C7-7D03A127016D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{22FB3B9D-1C06-480B-99C7-7D03A127016D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{22FB3B9D-1C06-480B-99C7-7D03A127016D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8BDC9057-60CC-AE88-FB22-3E5778B22B02}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8BDC9057-60CC-AE88-FB22-3E5778B22B02}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8BDC9057-60CC-AE88-FB22-3E5778B22B02}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8BDC9057-60CC-AE88-FB22-3E5778B22B02}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {DF3EE527-4614-49A0-AB7C-8BBD31F44DEE}
+	EndGlobalSection
+EndGlobal
