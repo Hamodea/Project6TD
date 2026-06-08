@@ -13,7 +13,7 @@ namespace Project6TD.Projectiles
         public void SpawnProjectile(Projectile projectile)
         {
             projectiles.Add(projectile);
-            //AssetsManager.enemyDamage.Play(0.8f, 0f, 0f);
+            AssetsManager.enemyDamage.Play(0.8f, 0f, 0f);
             AssetsManager.towerShoot.Play();
             
         }

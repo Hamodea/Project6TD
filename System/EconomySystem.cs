@@ -1,4 +1,5 @@
-﻿using System;
+﻿using System.Diagnostics;
+
 
 namespace Project6TD.Systems
 {
@@ -28,7 +29,7 @@ namespace Project6TD.Systems
         public void Earn(int amount)
         {
             Money += amount;
-            System.Diagnostics.Debug.WriteLine($"Economy.Earn: +{amount} -> Money={Money}");
+            Debug.WriteLine($"Economy.Earn: +{amount} -> Money={Money}");
         }
 
         public void Reset(int startMoney)

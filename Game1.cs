@@ -11,6 +11,7 @@ using Project6TD.Towers;
 using Project6TD.Systems;
 using System.Diagnostics;
 using Project6TD.Core;
+using Project6TD.System;
 
 namespace Project6TD
 {
@@ -30,6 +31,7 @@ namespace Project6TD
         private BuildSystem buildSystem;
         private ParticleSystem particleSystem;
         private EconomySystem economySystem;
+        private PlayerStats playerStats;
 
         // UI
         private ImGuiRenderer imGuiRenderer;
@@ -38,13 +40,13 @@ namespace Project6TD
         GameState currentState = GameState.MainMenu;
         PauseMenuUI pauseMenuUI;
         GameOverUI gameOverUI;
-        
+
         GameStateManager gameStateManager;
         private bool drawEnemy2Test = true;
 
         // Economy
         private int money = 200;
-        
+
 
         public Game1()
         {
@@ -59,7 +61,7 @@ namespace Project6TD
             graphics.PreferredBackBufferHeight = 720;
             graphics.ApplyChanges();
 
-           
+
 
             Window.Title = "Tower Defense";
             base.Initialize();
@@ -72,7 +74,7 @@ namespace Project6TD
             // --- Assets (textures + animations) ---
             AssetsManager.LoadTexture(Content, GraphicsDevice);
             AssetsManager.LoadSounds(Content);
-          
+
 
             // --- Level (background, path, placementMask) ---
             level = new Level(GraphicsDevice, Content);
@@ -80,8 +82,9 @@ namespace Project6TD
             // --- Economy ---
             economySystem = new EconomySystem(money);
 
+            PlayerStats playerStats = new PlayerStats(5);
             // --- Managers ---
-            enemyManager = new EnemyManager(level.RoadPath, AssetsManager.EnemyWalk, economySystem);
+            enemyManager = new EnemyManager(level.RoadPath, AssetsManager.EnemyWalk, economySystem, playerStats);
             towerManager = new TowerManager();
             projectileManager = new ProjectileManager();
             waveManager = new WaveManager(enemyManager);
@@ -95,20 +98,20 @@ namespace Project6TD
             imGuiRenderer = new ImGuiRenderer(this);
             imGuiRenderer.RebuildFontAtlas();
             gameStateManager = new GameStateManager(enemyManager, towerManager, projectileManager, waveManager,
-                buildSystem, particleSystem, economySystem);
-            
+                buildSystem, particleSystem, economySystem, playerStats);
+
         }
 
         protected override void Update(GameTime gameTime)
         {
             if (Keyboard.GetState().IsKeyDown(Keys.Space))
-             {
+            {
                 AssetsManager.towerShoot.Play();
                 Debug.WriteLine("test");
             }
 
             gameStateManager.Update(gameTime);
-            
+
 
             base.Update(gameTime);
         }
@@ -118,7 +121,7 @@ namespace Project6TD
         {
             GraphicsDevice.Clear(Color.Black);
 
-            // MENU BACKGROUND 
+            // ===== MAIN MENU =====
             if (gameStateManager.CurrentState == GameState.MainMenu)
             {
                 spriteBatch.Begin();
@@ -130,28 +133,33 @@ namespace Project6TD
                         0,
                         GraphicsDevice.Viewport.Width,
                         GraphicsDevice.Viewport.Height),
-                    Color.White 
+                    Color.White
                 );
 
                 spriteBatch.End();
             }
-
-            // ===== WORLD / GAMEPLAY DRAW =====
-            if (gameStateManager.CurrentState != GameState.MainMenu)
+            else
             {
+                // ===== WORLD =====
+
+                // Background
                 spriteBatch.Begin();
                 level.Draw(spriteBatch);
                 spriteBatch.End();
 
-                level.DrawRoad(spriteBatch);
+                // Road (outside SpriteBatch)
+                level.DrawRoad();
 
+                // Game objects
                 spriteBatch.Begin();
 
-               
                 enemyManager.Draw(spriteBatch);
                 towerManager.Draw(spriteBatch);
                 projectileManager.Draw(spriteBatch);
                 particleSystem.Draw(spriteBatch);
+                buildSystem.DrawPreview(spriteBatch);
+                // 🔥 Uncomment only for debugging
+                level.DrawDebugMask(spriteBatch);
 
                 spriteBatch.End();
             }
@@ -161,8 +169,5 @@ namespace Project6TD
 
             base.Draw(gameTime);
         }
-        
-        
-
     }
 }

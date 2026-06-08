@@ -34,19 +34,20 @@ namespace Project6TD
             }
         }
 
-        public void Draw(SpriteBatch spriteBatch, Vector2 position, float Scale)
+        public void Draw(SpriteBatch spriteBatch, Vector2 position, float scale, Color color)
         {
             var frame = frames[currentFrame];
-            // Use bottom-center origin so Position represents the sprite's feet
+
             Vector2 origin = new Vector2(frame.Width / 2f, frame.Height);
+
             spriteBatch.Draw(
                 texture,
                 position,
                 frame,
-                Color.White,
+                color,
                 0f,
                 origin,
-                Scale,
+                scale,
                 SpriteEffects.None,
                 0f
             );

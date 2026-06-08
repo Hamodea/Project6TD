@@ -19,10 +19,10 @@ namespace Project6TD.Projectiles
         private float rotation;
         private float scale = 0.2f;
         private ParticleSystem particleSystem;
+        private bool appliesSlow;
 
 
-
-        public Projectile(Vector2 startPos, Enemy target, float speed, int damage, ParticleSystem particleSystem)
+        public Projectile(Vector2 startPos, Enemy target, float speed, int damage, ParticleSystem particleSystem, bool appliesSlow)
         {
             Position = startPos;
             this.target = target;
@@ -31,6 +31,7 @@ namespace Project6TD.Projectiles
 
             texture = AssetsManager.projectileTex;
             this.particleSystem = particleSystem;
+            this.appliesSlow = appliesSlow;
         }
 
         public void Update(GameTime gameTime)
@@ -47,9 +48,14 @@ namespace Project6TD.Projectiles
             if (distance < 10f)
             {
                 target.TakeDamage(damage);
+
+                if (appliesSlow)
+                {
+                    target.ApplySlow(0.5f, 2f);
+                }
+
                 particleSystem?.SpawnExplosion(Position);
-                if (particleSystem == null)
-                    throw new Exception("ParticleSystem is NULL in Projectile");
+
                 IsActive = false;
                 return;
             }

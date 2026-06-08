@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Diagnostics;
 
 namespace Project6TD.Enemies
 {
@@ -17,11 +18,17 @@ namespace Project6TD.Enemies
         public int Reward { get; protected set; }
         public float Scale { get; protected set; } = 1f;
 
+        //slow
+        private float baseSpeed;
+        private float slowTimer = 0f;
+        private float slowMultiplier = 1f;
+
 
         public Enemy(CatmullRomPath path, Animation walkAnimation, float speed)
         {
             this.path = path;
             this.walkAnimation = walkAnimation;
+            this.baseSpeed = speed;
             this.speed = speed;
 
             t = 0f;
@@ -33,7 +40,19 @@ namespace Project6TD.Enemies
 
         public override void Update(GameTime gameTime)
         {
-            t += speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            float delta = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            if (slowTimer > 0)
+            {
+                slowTimer -= delta;
+                speed = baseSpeed * slowMultiplier;
+            }
+            else
+            {
+                speed = baseSpeed;
+            }
+
+            t += speed * delta;
 
             if (t >= 1f)
             {
@@ -47,22 +66,30 @@ namespace Project6TD.Enemies
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            walkAnimation.Draw(spriteBatch, Position, Scale);
+            Color tint = slowTimer > 0 ? Color.Lerp(Color.White, Color.Blue, 0.7f) : Color.White;
+            walkAnimation.Draw(spriteBatch, Position, Scale, tint);
+           
         }
 
         public void TakeDamage(float damage)
         {
             Health -= damage;
-            System.Diagnostics.Debug.WriteLine($"Enemy.TakeDamage: -{damage} -> Health={Health}");
+            Debug.WriteLine($"Enemy.TakeDamage: -{damage} -> Health={Health}");
             Console.WriteLine($"Enemy.TakeDamage: -{damage} -> Health={Health}");
 
             if (Health <= 0)
             {
                 Health = 0;
                 IsActive = false;
-                System.Diagnostics.Debug.WriteLine("Enemy.TakeDamage: enemy died");
+                Debug.WriteLine("Enemy.TakeDamage: enemy died");
                 Console.WriteLine("Enemy.TakeDamage: enemy died");
             }
+        }
+
+        public void ApplySlow(float multiplier, float duration)
+        {
+            slowMultiplier = multiplier;
+            slowTimer = duration;
         }
     }
 }

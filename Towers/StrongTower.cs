@@ -7,13 +7,13 @@ namespace Project6TD.Towers
     public class StrongTower : Tower
     {
         Texture2D texture;
-        private float projectileSpeed = 300f;
+        private float projectileSpeed = 350f;
         private readonly ParticleSystem particleSystem;
-        private float damage = 60f;
+        private float damage = 45f;
     
 
         public StrongTower(Vector2 Position, Texture2D texture, ParticleSystem particleSystem)
-            : base(Position, range: 180f, fireRate: 0.5f)
+            : base(Position, range: 190f, fireRate: 1.2f)
         {
             this.texture = texture;
             this.particleSystem = particleSystem;
@@ -39,7 +39,8 @@ namespace Project6TD.Towers
                         enemy,
                         projectileSpeed,
                         (int)damage,
-                        particleSystem
+                        particleSystem,
+                        false
                     )
                 );
 

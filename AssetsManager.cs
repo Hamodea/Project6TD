@@ -21,9 +21,12 @@ namespace Project6TD
         public static Animation EnemyWalk;
         public static Animation Enemy2Walk;
         public static Texture2D strongtowerTex;
+        public static Texture2D cirkelTex;
         public static SoundEffect towerShoot;
         public static SoundEffect enemyDamage;
         public static Song gameIntro;
+        public static Texture2D slowTowerTex;
+
        
 
         public static void LoadTexture(ContentManager content, GraphicsDevice graphicsDevice)
@@ -35,6 +38,10 @@ namespace Project6TD
             enemy2Tex = content.Load<Texture2D>("Assets/walkSheet2");
             strongtowerTex = content.Load<Texture2D>("Assets/tower2");
             bakgroundTex = content.Load<Texture2D>("TDbg");
+            cirkelTex = content.Load<Texture2D>("Assets/CircleTex");
+            slowTowerTex = content.Load<Texture2D>("Assets/Tower3");
+
+
             
 
 

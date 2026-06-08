@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Project6TD.Systems;
 using Project6TD.Towers;
@@ -9,7 +10,8 @@ namespace Project6TD
     public enum TowerType
     {
         Basic,
-        Strong
+        Strong,
+        Slow
     }
 
     public class BuildSystem
@@ -59,14 +61,20 @@ namespace Project6TD
 
             var mouse = Mouse.GetState();
 
-            // Klick-detekt (pressed THIS frame)
+            // Klick-detekt
             if (mouse.LeftButton == ButtonState.Pressed &&
                 previousMouseState == ButtonState.Released)
             {
                 if (!level.IsPlacementAllowed(mouse.X, mouse.Y))
                     goto End;
 
-                int cost = pendingTowerType == TowerType.Basic ? 50 : 100;
+                int cost = pendingTowerType switch
+                {
+                    TowerType.Basic => 50,
+                    TowerType.Slow => 75,
+                    TowerType.Strong => 100,
+                    _ => 50
+                };
 
                 if (!economySystem.CanAfford(cost))
                     goto End;
@@ -80,6 +88,16 @@ namespace Project6TD
                             particleSystem
                         )
                     );
+                }
+                else if (pendingTowerType == TowerType.Slow)
+                {
+                    towerManager.AddTower(
+                        new SlowTower(
+                            new Vector2(mouse.X, mouse.Y),
+                            AssetsManager.slowTowerTex, 
+                            particleSystem
+                        )
+                     );
                 }
                 else // Strong
                 {
@@ -100,7 +118,74 @@ namespace Project6TD
             previousMouseState = mouse.LeftButton;
         }
 
+        public void DrawPreview(SpriteBatch spriteBatch)
+        {
+            if (!IsBuilding)
+                return;
 
+            var mouse = Mouse.GetState();
+            Vector2 pos = new Vector2(mouse.X, mouse.Y);
 
+            bool allowed = level.IsPlacementAllowed(mouse.X, mouse.Y);
+            int cost = pendingTowerType switch
+            {
+                TowerType.Basic => 50,
+                TowerType.Slow => 75,
+                TowerType.Strong => 100,
+                _ => 50
+            };
+            bool canAfford = economySystem.CanAfford(cost);
+
+            Color previewColor = (allowed && canAfford)
+                ? Color.LimeGreen * 0.8f
+                : Color.Red * 0.8f;
+
+            Texture2D tex = pendingTowerType switch
+            {
+                TowerType.Basic => AssetsManager.towerTex,
+                TowerType.Slow => AssetsManager.slowTowerTex,
+                TowerType.Strong => AssetsManager.strongtowerTex,
+                _ => AssetsManager.towerTex
+            };
+
+            float range = pendingTowerType switch
+            {
+                TowerType.Basic => 160f,
+                TowerType.Slow => 170f,
+                TowerType.Strong => 190f,
+                _ => 160f
+            };
+
+            float scale = (range * 2f) / AssetsManager.cirkelTex.Width;
+
+            spriteBatch.Draw(
+                AssetsManager.cirkelTex,
+                pos,
+                null,
+                previewColor * 0.4f,
+                0f,
+                new Vector2(
+                    AssetsManager.cirkelTex.Width / 2f,
+                    AssetsManager.cirkelTex.Height / 2f),
+                scale,
+                SpriteEffects.None,
+                0f
+            );
+
+            //  Rita tornet ovanpå
+            Vector2 origin = new Vector2(tex.Width / 2f, tex.Height / 2f);
+
+            spriteBatch.Draw(
+                tex,
+                pos,
+                null,
+                previewColor * 0.8f,
+                0f,
+                origin,
+                1f,
+                SpriteEffects.None,
+                0f
+            );
+        }
     }
 }

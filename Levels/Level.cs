@@ -12,8 +12,10 @@ public class Level
 
     private RenderTarget2D placementMask;
     private Texture2D pixel;
+    private GraphicsDevice graphicsDevice;
 
-    GraphicsDevice graphicsDevice;
+    private int roadWidth = 40;   // samma som DrawFillSetup
+    private int roadMaskRadius = 22; // halva vägbredden ungefär
 
     public Level(GraphicsDevice graphicsDevice, ContentManager content)
     {
@@ -25,107 +27,85 @@ public class Level
         pixel.SetData(new[] { Color.White });
 
         CreatePath();
-        RoadPath.DrawFillSetup(graphicsDevice, 40, 6, 30);
-        CreatePlacementMask();
+        RoadPath.DrawFillSetup(graphicsDevice, (uint)roadWidth, 6, 30);
 
+        CreatePlacementMask();
     }
 
     private void CreatePath()
     {
-        RoadPath = new CatmullRomPath(graphicsDevice, 0.35f);
+        RoadPath = new CatmullRomPath(graphicsDevice, 0.5f);
         RoadPath.Clear();
         LoadPath.LoadPathFromFile(RoadPath, "level1.txt");
-       
     }
 
     private void CreatePlacementMask()
     {
+        var vp = graphicsDevice.Viewport;
+
         placementMask = new RenderTarget2D(
             graphicsDevice,
-            Background.Width,
-            Background.Height
+            vp.Width,
+            vp.Height
         );
 
         graphicsDevice.SetRenderTarget(placementMask);
         graphicsDevice.Clear(Color.White);
 
         SpriteBatch sb = new SpriteBatch(graphicsDevice);
-        sb.Begin();
 
-        var vp = graphicsDevice.Viewport;
+        sb.Begin(SpriteSortMode.Deferred, BlendState.Opaque);
 
-        for (float t = 0; t < 1f; t += 0.005f)
+        for (float t = 0; t < 1f; t += 0.002f)
         {
-            Vector2 worldPos = RoadPath.EvaluateAt(t);
+            Vector2 pos = RoadPath.EvaluateAt(t);
 
-            // KONVERTERA WORLD → TEXTURE SPACE
-            float u = worldPos.X / vp.Width;
-            float v = worldPos.Y / vp.Height;
-
-            int tx = (int)(u * placementMask.Width);
-            int ty = (int)(v * placementMask.Height);
-
-            int roadMaskRadius = 20;
             sb.Draw(pixel,
-                new Rectangle(tx - roadMaskRadius, ty - roadMaskRadius, roadMaskRadius * 2, roadMaskRadius * 2),
+                new Rectangle(
+                    (int)pos.X - 22,
+                    (int)pos.Y - 22,
+                    44,
+                    44),
                 Color.Black);
         }
 
         sb.End();
+
         graphicsDevice.SetRenderTarget(null);
     }
-
 
     public bool IsPlacementAllowed(int x, int y)
     {
         if (placementMask == null)
             return false;
 
-        // Mouse coords (x,y) are in window / backbuffer space.
-        // placementMask is in background-texture space. Map window -> mask coordinates.
-        var vp = graphicsDevice.Viewport;
-        if (vp.Width == 0 || vp.Height == 0)
+        if (x < 0 || x >= placementMask.Width ||
+            y < 0 || y >= placementMask.Height)
             return false;
 
-        float u = (float)x / vp.Width;
-        float v = (float)y / vp.Height;
+        Color[] data = new Color[1];
+        placementMask.GetData(0, new Rectangle(x, y, 1, 1), data, 0, 1);
 
-        int tx = (int)(u * placementMask.Width);
-        int ty = (int)(v * placementMask.Height);
+        var c = data[0];
 
-        if (tx < 0 || tx >= placementMask.Width ||
-            ty < 0 || ty >= placementMask.Height)
-            return false;
+        System.Diagnostics.Debug.WriteLine($"Pixel: {c}");
 
-        Color[] pixel = new Color[1];
-        placementMask.GetData(0, new Rectangle(tx, ty, 1, 1), pixel, 0, 1);
-        return pixel[0] == Color.White;
+        return c.R > 200 && c.G > 200 && c.B > 200;
     }
 
     public void Draw(SpriteBatch spriteBatch)
     {
-
-
-        var viewPort = graphicsDevice.Viewport;
-        var dest = new Rectangle(0, 0, viewPort.Width, viewPort.Height);
-        spriteBatch.Draw(Background, dest, Color.White);
-
+        // 🔥 Ingen scaling
+        spriteBatch.Draw(Background, Vector2.Zero, Color.White);
     }
 
-    public void DrawRoad(SpriteBatch spriteBatch)
+    public void DrawRoad()
     {
         RoadPath.DrawFill(graphicsDevice, AssetsManager.roadTex);
     }
-    //public void DrawDebugMask(SpriteBatch spriteBatch)
-    //{
-    //    var vp = graphicsDevice.Viewport;
-    //    var dest = new Rectangle(0, 0, vp.Width, vp.Height);
 
-    //    spriteBatch.Draw(placementMask, dest, Color.Red * 0.3f);
-    //}
-
-
-
-
-
+    public void DrawDebugMask(SpriteBatch spriteBatch)
+    {
+        spriteBatch.Draw(placementMask, Vector2.Zero, Color.Red * 0.4f);
+    }
 }

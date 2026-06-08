@@ -25,8 +25,14 @@ namespace Project6TD.Towers
 
                 if (target != null)
                 {
-                    // Polymorphic call — no type check needed
-                    tower.TryAttack(target, projectileManager, gameTime);
+                    float distance = Vector2.Distance(tower.Position, target.Position);
+
+                    if (distance <= tower.Range) // <-- RANGE CHECK
+                    {
+                        tower.TryAttack(target, projectileManager, gameTime);
+                    }
+                    
+                    
                 }
             }
         }

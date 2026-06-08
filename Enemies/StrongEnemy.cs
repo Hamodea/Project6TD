@@ -11,10 +11,10 @@ namespace Project6TD.Enemies
     {
         public StrongEnemy(CatmullRomPath path, Animation animation): base (path, animation, speed: 0.05f)
         {
-            MaxHealth = 300;
+            MaxHealth = 160;
             Health = MaxHealth;
             Reward = 25;
-            Scale = 0.55f;
+            Scale = 0.60f;
         }
     }
 }

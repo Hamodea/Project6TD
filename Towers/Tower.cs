@@ -27,7 +27,7 @@ namespace Project6TD.Towers
         {
             fireTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
         }
-
+        public float Range => range;
 
         // New: allow polymorphic attack attempts from manager
         public virtual void TryAttack(Enemy enemy, ProjectileManager projectileManager, GameTime gameTime)

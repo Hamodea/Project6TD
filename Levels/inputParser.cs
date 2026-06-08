@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace Project6TD.Levels
 {
@@ -37,13 +38,13 @@ namespace Project6TD.Levels
 
         public static Vector2 parse_Vector2(string line)
         {
-            System.Diagnostics.Debug.WriteLine("Got " + line);
+            Debug.WriteLine("Got " + line);
             int[] ints = parse_ints(line);
 
             if (ints.Length < 2)
                 throw new ArgumentException($"Expected 2 integers (x,y) but got {ints.Length}. Line: '{line}'");
 
-            System.Diagnostics.Debug.WriteLine("Parsed " + ints[0].ToString() + ", " + ints[1].ToString());
+            Debug.WriteLine("Parsed " + ints[0].ToString() + ", " + ints[1].ToString());
             return new Vector2(ints[0], ints[1]);
         }
     }

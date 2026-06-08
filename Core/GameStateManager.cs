@@ -10,6 +10,7 @@ using Project6TD.Waves;
 using System;
 using Project6TD.Systems;
 using Microsoft.Xna.Framework.Media;
+using Project6TD.System;
 
 namespace Project6TD.Core
 {
@@ -33,6 +34,7 @@ namespace Project6TD.Core
         private ParticleSystem particleSystem;
 
         private EconomySystem economySystem;
+        private PlayerStats playerStats;
 
         public bool GameplayActive => CurrentState == GameState.Playing;
 
@@ -43,7 +45,8 @@ namespace Project6TD.Core
             WaveManager waveManager,
             BuildSystem buildSystem,
             ParticleSystem particleSystem,
-            EconomySystem economySystem)
+            EconomySystem economySystem,
+            PlayerStats playerStats)
         {
             this.enemyManager = enemyManager;
             this.towerManager = towerManager;
@@ -52,6 +55,7 @@ namespace Project6TD.Core
             this.buildSystem = buildSystem;
             this.particleSystem = particleSystem;
             this.economySystem = economySystem;
+            this.playerStats = playerStats;
         }
 
         public void Update(GameTime gameTime)
@@ -124,18 +128,25 @@ namespace Project6TD.Core
             }
 
             if (!ImGui.GetIO().WantCaptureMouse)
-                buildSystem.Update(gameTime); 
+                buildSystem.Update(gameTime);
 
-            if (enemyManager.HasEnemyEscaped)
+            //if (enemyManager.HasEnemyEscaped)
+            //{
+            //    CurrentState = GameState.GameOver;
+            //}
+            // Win state 
+            if (playerStats.IsDead)
             {
                 CurrentState = GameState.GameOver;
+                return;
             }
-                // Win state 
-            if (!waveManager.HasMoreWaves && enemyManager.IsWaveFinished && !waveManager.IsWaveRunning)
+
+            if (waveManager.CurrentWaveNumber == waveManager.MaxWaves &&
+                enemyManager.IsWaveFinished)
             {
                 CurrentState = GameState.Win;
             }
-                
+
         }
 
         private void UpdatePaused()
@@ -179,13 +190,14 @@ namespace Project6TD.Core
 
         private void StartNewGame()
         {
-            economySystem.Reset(200);
+            economySystem.Reset(100);
 
             enemyManager.Reset();
             towerManager.Clear();
             waveManager.Reset();
             buildSystem.CancelBuilding();
             waveManager.StartNextWave();
+            playerStats.Reset();
         }
 
         public void DrawUI(GameTime gameTime, ImGuiRenderer imGuiRenderer)
@@ -200,8 +212,8 @@ namespace Project6TD.Core
 
                 case GameState.Playing:
                    
-                    gameUI.Draw( economySystem,
-                        waveManager.CurrentWaveNumber,
+                    gameUI.Draw( economySystem,playerStats,
+                        waveManager,
                         waveManager.IsWaveRunning);
                     break;
 
