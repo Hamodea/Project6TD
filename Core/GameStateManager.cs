@@ -32,9 +32,11 @@ namespace Project6TD.Core
         private WaveManager waveManager;
         private BuildSystem buildSystem;
         private ParticleSystem particleSystem;
-
+        private int startMoney = 100;
         private EconomySystem economySystem;
         private PlayerStats playerStats;
+
+      
 
         public bool GameplayActive => CurrentState == GameState.Playing;
 
@@ -118,22 +120,26 @@ namespace Project6TD.Core
             enemyManager.Update(gameTime);
             projectileManager.Update(gameTime);
             towerManager.Update(gameTime, enemyManager, projectileManager);
-            waveManager.Update();
-            particleSystem.Update(gameTime);
-
-            if (gameUI.StartWaveRequested)
+            waveManager.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
+            // Auto start next wave
+            if (!waveManager.IsWaveRunning &&
+                waveManager.HasMoreWaves &&
+                enemyManager.IsWaveFinished)
             {
                 waveManager.StartNextWave();
-                gameUI.ResetBuildRequest();
+                gameUI.ShowWaveMessage();
+                AssetsManager.waveStart.Play();
+                
             }
+
+            particleSystem.Update(gameTime);
+
+          
+           
 
             if (!ImGui.GetIO().WantCaptureMouse)
                 buildSystem.Update(gameTime);
 
-            //if (enemyManager.HasEnemyEscaped)
-            //{
-            //    CurrentState = GameState.GameOver;
-            //}
             // Win state 
             if (playerStats.IsDead)
             {
@@ -147,6 +153,7 @@ namespace Project6TD.Core
                 CurrentState = GameState.Win;
             }
 
+            
         }
 
         private void UpdatePaused()
@@ -190,7 +197,7 @@ namespace Project6TD.Core
 
         private void StartNewGame()
         {
-            economySystem.Reset(100);
+            economySystem.Reset(startMoney);
 
             enemyManager.Reset();
             towerManager.Clear();

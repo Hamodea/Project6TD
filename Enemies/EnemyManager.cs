@@ -78,8 +78,9 @@ public class EnemyManager
                 }
                 else
                 {
-                    int damageToPlayer = enemies[i] is StrongEnemy ? 3 : 1;
+                    int damageToPlayer = enemies[i] is StrongEnemy ? 2 : 1;
                     playerStats.TakeDamage(damageToPlayer);
+                    AssetsManager.baseHit.Play();
                 }
                 AssetsManager.enemyDamage.Play();
                 enemies.RemoveAt(i);

@@ -9,11 +9,11 @@ namespace Project6TD.Towers
         Texture2D texture;
         private float projectileSpeed = 350f;
         private readonly ParticleSystem particleSystem;
-        private float damage = 45f;
+        private float damage = 25f;
     
 
         public StrongTower(Vector2 Position, Texture2D texture, ParticleSystem particleSystem)
-            : base(Position, range: 190f, fireRate: 1.2f)
+            : base(Position, range: 160f, fireRate: 1.5f)
         {
             this.texture = texture;
             this.particleSystem = particleSystem;
@@ -21,7 +21,7 @@ namespace Project6TD.Towers
 
 
 
-        // Example: override TryAttack with stronger projectile
+        // override TryAttack with stronger projectile
         public override void TryAttack(Enemy enemy, ProjectileManager projectileManager, GameTime gameTime)
         {
             RotateTowards(enemy.Position, gameTime);
@@ -48,10 +48,7 @@ namespace Project6TD.Towers
             }
         }
 
-        //public override void Attack(EnemyType enemy)
-        //{
-        //    // Optional: immediate damage instead of projectiles
-        //}
+        
 
         public override void Draw(SpriteBatch spriteBatch)
         {

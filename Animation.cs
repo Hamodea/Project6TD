@@ -10,7 +10,6 @@ namespace Project6TD
         int currentFrame;
         float timer;
         float frameTime;
-        float Scale = 1f;
         
 
         public Animation(Texture2D texture, Rectangle[] frames, float frameTime)

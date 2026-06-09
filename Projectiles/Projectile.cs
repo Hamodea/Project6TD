@@ -8,14 +8,12 @@ using System;
 
 namespace Project6TD.Projectiles
 {
-    public class Projectile
+    public class Projectile: GameObject
     {
-        public Vector2 Position;
         private Texture2D texture;
         private Enemy target;
         private float speed;
         private int damage;
-        public bool IsActive = true;
         private float rotation;
         private float scale = 0.2f;
         private ParticleSystem particleSystem;
@@ -34,7 +32,7 @@ namespace Project6TD.Projectiles
             this.appliesSlow = appliesSlow;
         }
 
-        public void Update(GameTime gameTime)
+        public override void Update(GameTime gameTime)
         {
             if (target == null || !target.IsActive)
             {
@@ -51,7 +49,7 @@ namespace Project6TD.Projectiles
 
                 if (appliesSlow)
                 {
-                    target.ApplySlow(0.5f, 2f);
+                    target.ApplyFreeze(1.5f);
                 }
 
                 particleSystem?.SpawnExplosion(Position);
@@ -65,7 +63,7 @@ namespace Project6TD.Projectiles
             Position += direction * speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public override void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(
                 texture,

@@ -13,8 +13,7 @@ namespace Project6TD
         public Vector2 Position { get; protected set; }
         public bool IsActive { get; protected set; } = true;
 
-        public virtual Rectangle Bounds { get; }
-        public virtual void Update(GameTime gameTime) { }
-        public virtual void Draw(SpriteBatch spriteBatch) { }
+        public abstract void Update(GameTime gameTime);
+        public abstract void Draw(SpriteBatch spriteBatch);
     }
 }

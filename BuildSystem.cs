@@ -22,8 +22,7 @@ namespace Project6TD
         public bool IsBuilding { get; private set; }
         private ParticleSystem particleSystem;
         private EconomySystem economySystem;
-        // default cost for basic, strong cost is handled per-type
-        private int towerCost = 50;
+       
 
         private TowerType pendingTowerType = TowerType.Basic;
 
@@ -60,12 +59,12 @@ namespace Project6TD
                 return;
 
             var mouse = Mouse.GetState();
-
+            int towerRadius = 20;
             // Klick-detekt
             if (mouse.LeftButton == ButtonState.Pressed &&
                 previousMouseState == ButtonState.Released)
             {
-                if (!level.IsPlacementAllowed(mouse.X, mouse.Y))
+                if (!level.IsPlacementAllowed(mouse.X, mouse.Y, towerRadius))
                     goto End;
 
                 int cost = pendingTowerType switch
@@ -125,8 +124,8 @@ namespace Project6TD
 
             var mouse = Mouse.GetState();
             Vector2 pos = new Vector2(mouse.X, mouse.Y);
-
-            bool allowed = level.IsPlacementAllowed(mouse.X, mouse.Y);
+            int towerRadius = 20;
+            bool allowed = level.IsPlacementAllowed(mouse.X, mouse.Y, towerRadius);
             int cost = pendingTowerType switch
             {
                 TowerType.Basic => 50,

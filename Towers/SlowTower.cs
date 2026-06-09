@@ -13,13 +13,14 @@ namespace Project6TD.Towers
     public class SlowTower : Tower
     {
         private Texture2D texture;
-        private float damage = 8f;
+        private float damage = 5f;
         private float projectileSpeed = 400f;
         private readonly ParticleSystem particleSystem;
 
-        public SlowTower(Vector2 position, Texture2D texture, ParticleSystem particleSystem) : base(position, range:170f, fireRate:1.0f)
+        public SlowTower(Vector2 position, Texture2D texture, ParticleSystem particleSystem) : base(position, range:170f, fireRate:1.2f)
         {
             this.texture = texture;
+            this.particleSystem = particleSystem;
         }
 
         public override void TryAttack(Enemy enemy, ProjectileManager projectileManager, GameTime gameTime)

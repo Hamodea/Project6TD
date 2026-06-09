@@ -11,8 +11,10 @@ namespace Project6TD.UI
         public bool BuildRequested { get; private set; }
         public bool StartWaveRequested { get; private set; }
         public TowerType SelectedTowerType { get; private set; } = TowerType.Basic;
-        private PlayerStats playerStats;
-        private WaveManager waveManager;
+        // visa wave number
+        private float waveMessageTimer = 0f;
+        private const float waveMessageDuration = 2f;
+        private bool showWaveMessage = false;
         public void Draw(EconomySystem economy, PlayerStats playerStats, WaveManager waveManager, bool waveRunning)
         {
             ImGui.Begin("Tower Defense");
@@ -63,20 +65,50 @@ namespace Project6TD.UI
                 ImGui.TextColored(new Vector4(1, 1, 0, 1), "Click on map to place tower");
             }
 
-            // WAVES
-            if (!waveRunning)
-            {
-                if (ImGui.Button("Start Next Wave"))
-                {
-                    StartWaveRequested = true;
-                }
-            }
-            else
+
+
+            if (waveRunning)
             {
                 ImGui.Text("Wave in progress...");
             }
-
+            else if (waveManager.HasMoreWaves)
+            {
+                ImGui.Text("Next wave starting...");
+            }
+            else
+            {
+                ImGui.Text("All waves completed!");
+            }
             ImGui.End();
+
+            if (showWaveMessage)
+            {
+                waveMessageTimer -= ImGui.GetIO().DeltaTime;
+
+                if (waveMessageTimer <= 0f)
+                    showWaveMessage = false;
+
+                // Rita wave-text i mitten
+                var screenSize = ImGui.GetIO().DisplaySize;
+
+                ImGui.SetNextWindowPos(
+                    new Vector2(screenSize.X / 2f, screenSize.Y / 2f),
+                    ImGuiCond.Always,
+                    new Vector2(0.5f, 0.5f));
+
+                ImGui.Begin("WaveMessage",
+                    ImGuiWindowFlags.NoDecoration |
+                    ImGuiWindowFlags.NoBackground |
+                    ImGuiWindowFlags.NoInputs);
+
+                ImGui.SetWindowFontScale(3f);
+                ImGui.TextColored(
+                    new Vector4(1f, 0.8f, 0f, 1f),
+                    $"WAVE {waveManager.CurrentWaveNumber}");
+
+
+                ImGui.End();
+            }
         }
 
         public void ResetBuildRequest()
@@ -88,6 +120,12 @@ namespace Project6TD.UI
         public void ResetWaveRequest()
         {
             StartWaveRequested = false;
+        }
+
+        public void ShowWaveMessage()
+        {
+            showWaveMessage = true;
+            waveMessageTimer = waveMessageDuration;
         }
     }
 }

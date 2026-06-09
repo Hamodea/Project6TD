@@ -22,6 +22,7 @@ namespace Project6TD.Enemies
         private float baseSpeed;
         private float slowTimer = 0f;
         private float slowMultiplier = 1f;
+        private float freezeTimer = 0f;
 
 
         public Enemy(CatmullRomPath path, Animation walkAnimation, float speed)
@@ -42,7 +43,12 @@ namespace Project6TD.Enemies
         {
             float delta = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            if (slowTimer > 0)
+            if (freezeTimer > 0)
+            {
+                freezeTimer -= delta;
+                speed = 0f;
+            }
+            else if (slowTimer > 0)
             {
                 slowTimer -= delta;
                 speed = baseSpeed * slowMultiplier;
@@ -66,7 +72,7 @@ namespace Project6TD.Enemies
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            Color tint = slowTimer > 0 ? Color.Lerp(Color.White, Color.Blue, 0.7f) : Color.White;
+            Color tint = freezeTimer > 0 ? Color.Lerp(Color.White, Color.Blue, 0.7f) : Color.White;
             walkAnimation.Draw(spriteBatch, Position, Scale, tint);
            
         }
@@ -74,22 +80,20 @@ namespace Project6TD.Enemies
         public void TakeDamage(float damage)
         {
             Health -= damage;
-            Debug.WriteLine($"Enemy.TakeDamage: -{damage} -> Health={Health}");
-            Console.WriteLine($"Enemy.TakeDamage: -{damage} -> Health={Health}");
+            
 
             if (Health <= 0)
             {
                 Health = 0;
                 IsActive = false;
                 Debug.WriteLine("Enemy.TakeDamage: enemy died");
-                Console.WriteLine("Enemy.TakeDamage: enemy died");
+                
             }
         }
 
-        public void ApplySlow(float multiplier, float duration)
+        public void ApplyFreeze(float duration)
         {
-            slowMultiplier = multiplier;
-            slowTimer = duration;
+            freezeTimer = duration;
         }
     }
 }

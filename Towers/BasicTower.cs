@@ -8,12 +8,12 @@ namespace Project6TD.Towers
     public class BasicTower : Tower
     {
         private Texture2D texture;
-        private float damage = 18f;
+        private float damage = 10f;
         private float projectileSpeed = 400f;
         private readonly ParticleSystem particleSystem;
 
         public BasicTower(Vector2 position, Texture2D texture, ParticleSystem particleSystem)
-            : base(position, range: 160f, fireRate: 0.6f)
+            : base(position, range: 150f, fireRate: 0.8f)
         {
             this.texture = texture;
             this.particleSystem = particleSystem;

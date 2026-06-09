@@ -31,18 +31,12 @@ namespace Project6TD
         private BuildSystem buildSystem;
         private ParticleSystem particleSystem;
         private EconomySystem economySystem;
-        private PlayerStats playerStats;
+       
 
         // UI
         private ImGuiRenderer imGuiRenderer;
-        private GameUI gameUI;
-        private MainMenuUI mainMenuUI;
-        GameState currentState = GameState.MainMenu;
-        PauseMenuUI pauseMenuUI;
-        GameOverUI gameOverUI;
-
         GameStateManager gameStateManager;
-        private bool drawEnemy2Test = true;
+       
 
         // Economy
         private int money = 200;
@@ -104,12 +98,7 @@ namespace Project6TD
 
         protected override void Update(GameTime gameTime)
         {
-            if (Keyboard.GetState().IsKeyDown(Keys.Space))
-            {
-                AssetsManager.towerShoot.Play();
-                Debug.WriteLine("test");
-            }
-
+           
             gameStateManager.Update(gameTime);
 
 
@@ -158,8 +147,8 @@ namespace Project6TD
                 projectileManager.Draw(spriteBatch);
                 particleSystem.Draw(spriteBatch);
                 buildSystem.DrawPreview(spriteBatch);
-                // 🔥 Uncomment only for debugging
-                level.DrawDebugMask(spriteBatch);
+                // debugging
+                //level.DrawDebugMask(spriteBatch);
 
                 spriteBatch.End();
             }

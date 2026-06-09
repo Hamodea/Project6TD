@@ -9,7 +9,6 @@ namespace Project6TD.Towers
     public class TowerManager
     {
         private List<Tower> towers = new();
-        private ProjectileManager projectileManager;
         public void AddTower(Tower tower)
         {
             towers.Add(tower);

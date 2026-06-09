@@ -26,7 +26,10 @@ namespace Project6TD
         public static SoundEffect enemyDamage;
         public static Song gameIntro;
         public static Texture2D slowTowerTex;
-
+        public static Texture2D startPosTex;
+        public static Texture2D castelTex;
+        public static SoundEffect baseHit;
+        public static SoundEffect waveStart;
        
 
         public static void LoadTexture(ContentManager content, GraphicsDevice graphicsDevice)
@@ -40,6 +43,8 @@ namespace Project6TD
             bakgroundTex = content.Load<Texture2D>("TDbg");
             cirkelTex = content.Load<Texture2D>("Assets/CircleTex");
             slowTowerTex = content.Load<Texture2D>("Assets/Tower3");
+            castelTex = content.Load<Texture2D>("Assets/goalTex1");
+            startPosTex = content.Load<Texture2D>("Assets/startpos");
 
 
             
@@ -61,6 +66,8 @@ namespace Project6TD
             enemyDamage = content.Load<SoundEffect>("Assets/Sounds/enemyDamage");
             SoundEffect.MasterVolume = 1.0f;
             gameIntro = content.Load<Song>("Assets/Sounds/gameIntro"); 
+            baseHit = content.Load<SoundEffect>("Assets/Sounds/baseHit");
+            waveStart = content.Load<SoundEffect>("Assets/Sounds/warCall");
 
         }
 

@@ -29,12 +29,10 @@ namespace Project6TD.Towers
         }
         public float Range => range;
 
-        // New: allow polymorphic attack attempts from manager
-        public virtual void TryAttack(Enemy enemy, ProjectileManager projectileManager, GameTime gameTime)
-        {
-            // Default: no-op. Subclasses override to implement firing logic.
-        }
-
+       
+        public abstract void TryAttack(Enemy enemy, ProjectileManager projectileManager, GameTime gameTime);
+        
+         
         protected void RotateTowards(Vector2 targetPosition, GameTime gameTime)
         {
             Vector2 direction = targetPosition - Position;
